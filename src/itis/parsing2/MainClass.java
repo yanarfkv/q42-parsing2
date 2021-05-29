@@ -29,7 +29,7 @@ public class MainClass {
     private FactoryParsingServiceImpl factoryService = new FactoryParsingServiceImpl();
 
     public static void main(String[] args) throws Exception {
-        new MainClass().run("");
+        new MainClass().run("src/itis/parsing2/resources/2");
     }
 
     private void run(String factoryDirectoryPath) throws Exception {
@@ -39,12 +39,17 @@ public class MainClass {
         try {
             factory = factoryService.parseFactoryData(factoryDirectoryPath);
         } catch (FactoryParsingException parsingException) {
-            System.out.println(parsingException);
+            System.out.println(parsingException.getMessage());
+            parsingException.getValidationErrors().forEach(factoryValidationError -> {
+                System.out.printf("В поле %S найдена ошибка - %s\n", factoryValidationError.fieldName,
+                        factoryValidationError.validationError);
+            });
+
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
 
-        System.out.println(factory);
+        System.out.println(factory.toString());
 
     }
 
